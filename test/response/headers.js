@@ -5,6 +5,7 @@ const assert = require('assert');
 const response = require('../helpers/context').response;
 
 describe('res.header', () => {
+
   it('should return the response header object', () => {
     const res = response();
     res.set('X-Foo', 'bar');

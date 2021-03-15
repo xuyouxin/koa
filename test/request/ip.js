@@ -12,7 +12,7 @@ describe('req.ip', () => {
       const app = new Koa();
       const req = { headers: {}, socket: new Stream.Duplex() };
       app.proxy = true;
-      req.headers['x-forwarded-for'] = '127.0.0.1';
+      req.headers['x-forwarded-for'] = '127.0.0.1'; // result is equal to it
       req.socket.remoteAddress = '127.0.0.2';
       const request = Request(req, undefined, app);
       assert.equal(request.ip, '127.0.0.1');
@@ -22,7 +22,7 @@ describe('req.ip', () => {
   describe('with no req.ips present', () => {
     it('should return req.socket.remoteAddress', () => {
       const req = { socket: new Stream.Duplex() };
-      req.socket.remoteAddress = '127.0.0.2';
+      req.socket.remoteAddress = '127.0.0.2'; // result is equal to it
       const request = Request(req);
       assert.equal(request.ip, '127.0.0.2');
     });

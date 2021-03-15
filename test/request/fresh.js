@@ -5,6 +5,7 @@ const assert = require('assert');
 const context = require('../helpers/context');
 
 describe('ctx.fresh', () => {
+
   describe('the request method is not GET and HEAD', () => {
     it('should return false', () => {
       const ctx = context();

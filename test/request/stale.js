@@ -5,6 +5,7 @@ const assert = require('assert');
 const context = require('../helpers/context');
 
 describe('req.stale', () => {
+
   it('should be the inverse of req.fresh', () => {
     const ctx = context();
     ctx.status = 200;

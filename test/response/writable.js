@@ -6,6 +6,7 @@ const Koa = require('../../');
 const net = require('net');
 
 describe('res.writable', () => {
+
   describe('when continuous requests in one persistent connection', () => {
     function requestTwice(server, done){
       const port = server.address().port;

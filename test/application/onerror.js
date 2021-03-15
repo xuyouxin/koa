@@ -8,12 +8,16 @@ const mm = require('mm');
 describe('app.onerror(err)', () => {
   afterEach(mm.restore);
 
-  it('should throw an error if a non-error is given', () => {
+  it('should throw an error if a non-error is given -- in param err is not an object of Error', () => {
     const app = new Koa();
 
     assert.throws(() => {
       app.onerror('foo');
     }, TypeError, 'non-error thrown: foo');
+
+    assert.throws(() => {
+      app.onerror({msg: "error"});
+    }, TypeError, 'non-error thrown: {msg: "error"}');
   });
 
   it('should accept errors coming from other scopes', () => {

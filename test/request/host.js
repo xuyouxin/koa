@@ -25,7 +25,7 @@ describe('req.host', () => {
         'httpVersion': '1.1'
       });
       req.header[':authority'] = 'foo.com:3000';
-      req.header.host = 'bar.com:8000';
+      req.header.host = 'bar.com:8000'; // result is equal to it
       assert.equal(req.host, 'bar.com:8000');
     });
   });
@@ -36,7 +36,7 @@ describe('req.host', () => {
         'httpVersionMajor': 2,
         'httpVersion': '2.0'
       });
-      req.header[':authority'] = 'foo.com:3000';
+      req.header[':authority'] = 'foo.com:3000'; // result is equal to it
       req.header.host = 'bar.com:8000';
       assert.equal(req.host, 'foo.com:3000');
     });
@@ -75,10 +75,10 @@ describe('req.host', () => {
     describe('and proxy is trusted', () => {
       it('should be used on HTTP/1', () => {
         const req = request();
-        req.app.proxy = true;
-        req.header['x-forwarded-host'] = 'bar.com, baz.com';
+        req.app.proxy = true; // Note: it is key point
+        req.header['x-forwarded-host'] = 'bat.com, baz.com';
         req.header.host = 'foo.com';
-        assert.equal(req.host, 'bar.com');
+        assert.equal(req.host, 'bat.com');
       });
 
       it('should be used on HTTP/2', () => {
@@ -86,8 +86,8 @@ describe('req.host', () => {
           'httpVersionMajor': 2,
           'httpVersion': '2.0'
         });
-        req.app.proxy = true;
-        req.header['x-forwarded-host'] = 'proxy.com:8080';
+        req.app.proxy = true; // Note: it is key point
+        req.header['x-forwarded-host'] = 'proxy.com:8080'; // result is equal to it
         req.header[':authority'] = 'foo.com:3000';
         req.header.host = 'bar.com:8000';
         assert.equal(req.host, 'proxy.com:8080');

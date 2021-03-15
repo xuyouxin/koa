@@ -5,12 +5,13 @@ const context = require('../helpers/context');
 const assert = require('assert');
 
 describe('ctx.type=', () => {
+
   describe('with a mime', () => {
     it('should set the Content-Type', () => {
       const ctx = context();
       ctx.type = 'text/plain';
       assert.equal(ctx.type, 'text/plain');
-      assert.equal(ctx.response.header['content-type'], 'text/plain; charset=utf-8');
+      assert.equal(ctx.response.header['content-type'], 'text/plain; charset=utf-8'); // charset 默认为 utf-8
     });
   });
 
@@ -19,7 +20,7 @@ describe('ctx.type=', () => {
       const ctx = context();
       ctx.type = 'json';
       assert.equal(ctx.type, 'application/json');
-      assert.equal(ctx.response.header['content-type'], 'application/json; charset=utf-8');
+      assert.equal(ctx.response.header['content-type'], 'application/json; charset=utf-8'); // charset 默认为 utf-8
     });
   });
 
@@ -35,7 +36,7 @@ describe('ctx.type=', () => {
   describe('with a charset', () => {
     it('should not default the charset', () => {
       const ctx = context();
-      ctx.type = 'text/html; charset=foo';
+      ctx.type = 'text/html; charset=foo'; // 还可以随便填一个非法的charset?
       assert.equal(ctx.type, 'text/html');
       assert.equal(ctx.response.header['content-type'], 'text/html; charset=foo');
     });
@@ -44,7 +45,7 @@ describe('ctx.type=', () => {
   describe('with an unknown extension', () => {
     it('should not set a content-type', () => {
       const ctx = context();
-      ctx.type = 'asdf';
+      ctx.type = 'asdf'; // 非法的type，设置就会有问题
       assert(!ctx.type);
       assert(!ctx.response.header['content-type']);
     });
@@ -56,6 +57,7 @@ describe('ctx.type', () => {
     it('should return ""', () => {
       const ctx = context();
       assert(!ctx.type);
+      assert(!ctx.response.header['content-type']);
     });
   });
 

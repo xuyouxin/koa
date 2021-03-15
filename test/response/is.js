@@ -5,6 +5,7 @@ const context = require('../helpers/context');
 const assert = require('assert');
 
 describe('response.is(type)', () => {
+
   it('should ignore params', () => {
     const res = context().response;
     res.type = 'text/html; charset=utf-8';
@@ -56,6 +57,7 @@ describe('response.is(type)', () => {
 
       assert.equal(res.is('png'), 'png');
       assert.equal(res.is('.png'), '.png');
+
       assert.equal(res.is('text/*', 'image/*'), 'image/png');
       assert.equal(res.is('image/*', 'text/*'), 'image/png');
       assert.equal(res.is('image/*', 'image/png'), 'image/png');

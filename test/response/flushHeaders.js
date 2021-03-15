@@ -13,8 +13,8 @@ describe('ctx.flushHeaders()', () => {
     app.use((ctx, next) => {
       ctx.body = 'Body';
       ctx.status = 200;
-      ctx.flushHeaders();
-      assert.equal(ctx.res.headersSent, true);
+      ctx.flushHeaders(); // key point
+      assert.equal(ctx.res.headersSent, true); // result
     });
 
     const server = app.listen();
@@ -67,11 +67,11 @@ describe('ctx.flushHeaders()', () => {
     app.use((ctx, next) => {
       ctx.status = 401;
       ctx.res.setHeader('Content-Type', 'text/plain');
-      ctx.flushHeaders();
+      ctx.flushHeaders(); // key point
       ctx.body = 'foo';
-      ctx.set('X-Shouldnt-Work', 'Value');
-      ctx.remove('Content-Type');
-      ctx.vary('Content-Type');
+      ctx.set('X-Shouldnt-Work', 'Value'); // be ignored
+      ctx.remove('Content-Type'); // be ignored
+      ctx.vary('Content-Type'); // be ignored
     });
 
     const server = app.listen();

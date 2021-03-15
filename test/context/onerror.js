@@ -21,7 +21,8 @@ describe('ctx.onerror(err)', () => {
       .get('/')
       .expect(418)
       .expect('Content-Type', 'text/plain; charset=utf-8')
-      .expect('Content-Length', '4');
+      .expect('Content-Length', '4')
+      .expect('boom');
   });
 
   it('should unset all headers', async() => {
@@ -45,6 +46,26 @@ describe('ctx.onerror(err)', () => {
 
     assert.equal(res.headers.hasOwnProperty('vary'), false);
     assert.equal(res.headers.hasOwnProperty('x-csrf-token'), false);
+  });
+
+  it('set headers', async() => {
+    const app = new Koa();
+
+    app.use((ctx, next) => {
+      ctx.set('Vary', 'Accept-Encoding');
+      ctx.set('X-CSRF-Token', 'asdf');
+      ctx.body = 'response';
+    });
+
+    const server = app.listen();
+
+    const res = await request(server)
+      .get('/')
+      .expect(200)
+      .expect('Content-Type', 'text/plain; charset=utf-8')
+      .expect('Content-Length', '8')
+      .expect('Vary', 'Accept-Encoding');
+
   });
 
   it('should set headers specified in the error', async() => {
@@ -96,7 +117,8 @@ describe('ctx.onerror(err)', () => {
     request(app.callback())
       .get('/')
       .expect('X-Foo', 'Bar')
-      .expect(200, () => {});
+      .expect(200, () => {})
+      .expect("response");
   });
 
   it('should set status specified in the error using statusCode', () => {
@@ -105,6 +127,7 @@ describe('ctx.onerror(err)', () => {
     app.use((ctx, next) => {
       ctx.body = 'something else';
       const err = new Error('Not found');
+      // err.status = 404;  status can work also
       err.statusCode = 404;
       throw err;
     });
@@ -201,6 +224,63 @@ describe('ctx.onerror(err)', () => {
           .expect('Content-Type', 'text/plain; charset=utf-8')
           .expect('Internal Server Error');
       });
+
+      it('should respond 500 - 2', () => {
+        const app = new Koa();
+
+        app.use((ctx, next) => {
+          ctx.body = 'something else';
+          const err = new Error('some error');
+          err.status = 666;
+          throw err;
+        });
+
+        const server = app.listen();
+
+        return request(server)
+          .get('/')
+          .expect(500)
+          .expect('Content-Type', 'text/plain; charset=utf-8')
+          .expect('Internal Server Error');
+      });
+
+      it('should respond 500 - 3', () => {
+        const app = new Koa();
+
+        app.use((ctx, next) => {
+          ctx.body = 'something else';
+          const err = new Error('some error');
+          err.status = 444;
+          throw err;
+        });
+
+        const server = app.listen();
+
+        return request(server)
+          .get('/')
+          .expect(500)
+          .expect('Content-Type', 'text/plain; charset=utf-8')
+          .expect('Internal Server Error');
+      });
+
+      it('should respond 401', () => {
+        const app = new Koa();
+
+        app.use((ctx, next) => {
+          ctx.body = 'something else';
+          const err = new Error('some error');
+          err.status = 401;
+          throw err;
+        });
+
+        const server = app.listen();
+
+        return request(server)
+          .get('/')
+          .expect(401)
+          .expect('Content-Type', 'text/plain; charset=utf-8')
+          .expect('Unauthorized');
+      });
     });
   });
 
@@ -219,22 +299,22 @@ describe('ctx.onerror(err)', () => {
 
       const server = app.listen();
 
-      const gotRightErrorPromise = new Promise((resolve, reject) => {
-        app.on('error', receivedError => {
-          try {
-            assert.strictEqual(receivedError, error);
-            resolve();
-          } catch (e) {
-            reject(e);
-          }
-        });
-      });
+      // const gotRightErrorPromise = new Promise((resolve, reject) => {
+      //   app.on('error', receivedError => {
+      //     try {
+      //       assert.strictEqual(receivedError, error);
+      //       resolve();
+      //     } catch (e) {
+      //       reject(e);
+      //     }
+      //   });
+      // });
 
       await request(server)
         .get('/')
         .expect(418);
 
-      await gotRightErrorPromise;
+      // await gotRightErrorPromise;
     });
   });
 
@@ -261,7 +341,7 @@ describe('ctx.onerror(err)', () => {
 
       ctx.app.emit = () => {};
       ctx.res = {
-        getHeaderNames: () => ['content-type', 'content-length'],
+        getHeaderNames: () => ['content-type', 'content-length', 'xx'],
         removeHeader: () => removed++,
         end: () => {},
         emit: () => {}
@@ -269,13 +349,14 @@ describe('ctx.onerror(err)', () => {
 
       ctx.onerror(new Error('error'));
 
-      assert.equal(removed, 2);
+      assert.equal(removed, 3); // equal to length of HeaderNames
     });
 
     it('should stringify error if it is an object', done => {
       const app = new Koa();
 
       app.on('error', err => {
+        console.log("error>>",  err);
         assert.equal(err, 'Error: non-error thrown: {"key":"value"}');
         done();
       });

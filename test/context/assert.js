@@ -9,10 +9,10 @@ describe('ctx.assert(value, status)', () => {
     const ctx = context();
 
     try {
-      ctx.assert(false, 404);
+      ctx.assert(false, 405);
       throw new Error('asdf');
     } catch (err) {
-      assert.equal(err.status, 404);
+      assert.equal(err.status, 405);
       assert.strictEqual(err.expose, true);
     }
   });

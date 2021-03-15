@@ -6,11 +6,15 @@ const assert = require('assert');
 const fs = require('fs');
 
 describe('res.length', () => {
+
   describe('when Content-Length is defined', () => {
     it('should return a number', () => {
       const res = response();
       res.set('Content-Length', '1024');
-      assert.equal(res.length, 1024);
+      assert.equal(res.length, 1024); // equal to Content-Length
+
+      res.body = "hello"; // 会更新length值
+      assert.equal(res.length, 5);
     });
 
     describe('but not number', () => {
@@ -18,6 +22,9 @@ describe('res.length', () => {
         const res = response();
         res.set('Content-Length', 'hey');
         assert.equal(res.length, 0);
+
+        res.body = "hello"; // 会更新length值
+        assert.equal(res.length, 5);
       });
     });
   });
@@ -49,7 +56,7 @@ describe('res.length', () => {
         assert.equal(res.length, 17);
 
         res.body = fs.createReadStream('package.json');
-        assert.equal(res.length, undefined);
+        assert.equal(res.length, undefined); // 如果body是流的话，length是未知的（undefined）
 
         res.body = null;
         assert.equal(res.length, undefined);

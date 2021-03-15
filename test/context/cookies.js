@@ -32,7 +32,7 @@ describe('ctx.cookies', () => {
 
           app.use((ctx, next) => {
             try {
-              ctx.cookies.set('foo', 'bar', { signed: true });
+              ctx.cookies.set('name', 'john', { signed: true });
             } catch (err) {
               ctx.body = err.message;
             }
@@ -50,7 +50,7 @@ describe('ctx.cookies', () => {
         app.keys = ['a', 'b'];
 
         app.use((ctx, next) => {
-          ctx.cookies.set('name', 'jon', { signed: true });
+          ctx.cookies.set('name', 'john', { signed: true });
           ctx.status = 204;
         });
 

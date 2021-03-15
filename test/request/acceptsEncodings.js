@@ -5,7 +5,9 @@ const assert = require('assert');
 const context = require('../helpers/context');
 
 describe('ctx.acceptsEncodings()', () => {
+
   describe('with no arguments', () => {
+
     describe('when Accept-Encoding is populated', () => {
       it('should return accepted types', () => {
         const ctx = context();
@@ -38,6 +40,7 @@ describe('ctx.acceptsEncodings()', () => {
       const ctx = context();
       ctx.req.headers['accept-encoding'] = 'gzip, compress;q=0.2';
       assert.equal(ctx.acceptsEncodings(['compress', 'gzip']), 'gzip');
+      assert.equal(ctx.acceptsEncodings(['gzip', 'compress']), 'gzip');
     });
   });
 });

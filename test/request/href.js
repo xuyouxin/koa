@@ -21,7 +21,7 @@ describe('ctx.href', () => {
     const ctx = context(req);
     assert.equal(ctx.href, 'http://localhost/users/1?next=/dashboard');
     // change it also work
-    ctx.url = '/foo/users/1?next=/dashboard';
+    ctx.url = '/aa/bb/users/1?next=/dashboard';
     assert.equal(ctx.href, 'http://localhost/users/1?next=/dashboard');
   });
 

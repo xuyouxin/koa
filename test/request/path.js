@@ -5,7 +5,7 @@ const assert = require('assert');
 const context = require('../helpers/context');
 const parseurl = require('parseurl');
 
-describe('ctx.path', () => {
+describe('get ctx.path', () => {
   it('should return the pathname', () => {
     const ctx = context();
     ctx.url = '/login?next=/dashboard';
@@ -13,7 +13,7 @@ describe('ctx.path', () => {
   });
 });
 
-describe('ctx.path=', () => {
+describe('set ctx.path=', () => {
   it('should set the pathname', () => {
     const ctx = context();
     ctx.url = '/login?next=/dashboard';
@@ -31,10 +31,10 @@ describe('ctx.path=', () => {
     assert.equal(ctx.request.originalUrl, '/login');
   });
 
-  it('should not affect parseurl', () => {
+  it('should not affect parseurl(ctx.req)', () => {
     const ctx = context({ url: '/login?foo=bar' });
-    ctx.path = '/login';
+    ctx.path = '/logout';
     const url = parseurl(ctx.req);
-    assert.equal(url.path, '/login?foo=bar');
+    assert.equal(url.path, '/logout?foo=bar'); // ?, it is hard to understand
   });
 });

@@ -9,7 +9,8 @@ describe('ctx.response.has(name)', () => {
     const ctx = context();
     ctx.set('X-Foo', '');
     assert.ok(ctx.response.has('x-Foo'));
-    assert.ok(ctx.has('x-foo'));
+    assert.ok(ctx.has('x-Foo')); // 大小写不敏感
+    assert.ok(ctx.has('x-foo')); // 大小写不敏感
   });
 
   it('should return false for non-existent header', () => {

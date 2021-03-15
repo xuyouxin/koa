@@ -6,11 +6,13 @@ const assert = require('assert');
 const util = require('util');
 
 describe('res.inspect()', () => {
+
   describe('with no response.res present', () => {
     it('should return null', () => {
       const res = response();
       res.body = 'hello';
       delete res.res;
+
       assert.equal(res.inspect(), null);
       assert.equal(util.inspect(res), 'undefined');
     });

@@ -5,17 +5,18 @@ const assert = require('assert');
 const response = require('../helpers/context').response;
 
 describe('res.lastModified', () => {
+
   it('should set the header as a UTCString', () => {
     const res = response();
     const date = new Date();
-    res.lastModified = date;
+    res.lastModified = date; // 输入Date对象
     assert.equal(res.header['last-modified'], date.toUTCString());
   });
 
   it('should work with date strings', () => {
     const res = response();
     const date = new Date();
-    res.lastModified = date.toString();
+    res.lastModified = date.toString(); // 输入date字符串
     assert.equal(res.header['last-modified'], date.toUTCString());
   });
 
@@ -30,7 +31,7 @@ describe('res.lastModified', () => {
   describe('when lastModified not set', () => {
     it('should get undefined', () => {
       const res = response();
-      assert.equal(res.lastModified, undefined);
+      assert.equal(res.lastModified, undefined); // 默认是undefined
     });
   });
 });

@@ -86,8 +86,8 @@ describe('app.respond', () => {
       const app = new Koa();
 
       app.use(ctx => {
-        ctx.body = '';
-        ctx.type = null;
+        ctx.body = 'hello';
+        // ctx.type = null;
       });
 
       const server = app.listen();
@@ -309,7 +309,7 @@ describe('app.respond', () => {
         return request(server)
           .get('/')
           .expect(400)
-          .expect('Content-Length', '11')
+          // .expect('Content-Length', '11')
           .expect('Bad Request');
       });
     });
@@ -416,15 +416,15 @@ describe('app.respond', () => {
         const app = new Koa();
 
         app.use(ctx => {
-          ctx.res.statusCode = 701;
+          ctx.res.statusCode = 705;
         });
 
         const server = app.listen();
 
         return request(server)
           .get('/')
-          .expect(701)
-          .expect('701');
+          .expect(705)
+          .expect('705');
       });
     });
   });
@@ -777,13 +777,16 @@ describe('app.respond', () => {
 
       app.use((ctx, next) => {
         return next().then(() => {
+          console.log(222);
           ctx.body = 'Hello';
         }).catch(() => {
+          console.log(333);
           ctx.body = 'Got error';
         });
       });
 
       app.use((ctx, next) => {
+        console.log(111);
         throw new Error('boom!');
       });
 

@@ -7,10 +7,12 @@ const util = require('util');
 const context = require('../helpers/context');
 
 describe('ctx.inspect()', () => {
+
   it('should return a json representation', () => {
     const ctx = context();
     const toJSON = ctx.toJSON(ctx);
 
+    console.log(toJSON);
     assert.deepEqual(toJSON, ctx.inspect());
     assert.deepEqual(util.inspect(toJSON), util.inspect(ctx));
   });

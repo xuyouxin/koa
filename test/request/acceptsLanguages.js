@@ -5,6 +5,7 @@ const assert = require('assert');
 const context = require('../helpers/context');
 
 describe('ctx.acceptsLanguages(langs)', () => {
+
   describe('with no arguments', () => {
     describe('when Accept-Language is populated', () => {
       it('should return accepted types', () => {
@@ -17,11 +18,12 @@ describe('ctx.acceptsLanguages(langs)', () => {
 
   describe('with multiple arguments', () => {
     describe('when Accept-Language is populated', () => {
+
       describe('if any types types match', () => {
         it('should return the best fit', () => {
           const ctx = context();
           ctx.req.headers['accept-language'] = 'en;q=0.8, es, pt';
-          assert.equal(ctx.acceptsLanguages('es', 'en'), 'es');
+          assert.equal(ctx.acceptsLanguages('en', 'es'), 'es');
         });
       });
 
@@ -46,7 +48,7 @@ describe('ctx.acceptsLanguages(langs)', () => {
     it('should return the best fit', () => {
       const ctx = context();
       ctx.req.headers['accept-language'] = 'en;q=0.8, es, pt';
-      assert.equal(ctx.acceptsLanguages(['es', 'en']), 'es');
+      assert.equal(ctx.acceptsLanguages(['en', 'es']), 'es');
     });
   });
 });

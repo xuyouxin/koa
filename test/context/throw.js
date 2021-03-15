@@ -1,8 +1,8 @@
-
 'use strict';
 
 const context = require('../helpers/context');
 const assert = require('assert');
+const Koa = require('../..');
 
 describe('ctx.throw(msg)', () => {
   it('should set .status to 500', () => {
@@ -15,15 +15,27 @@ describe('ctx.throw(msg)', () => {
       assert.equal(err.expose, false);
     }
   });
+
+  it('should set .status to 500 - 2', () => {
+    const app = new Koa();
+
+    app.use((ctx, next) => {
+      try {
+        throw "boom";
+      } catch (err) {
+        assert.equal(err.status, 500);
+        assert.equal(err.expose, false);
+      }
+    });
+  });
 });
 
 describe('ctx.throw(err)', () => {
   it('should set .status to 500', () => {
     const ctx = context();
-    const err = new Error('test');
 
     try {
-      ctx.throw(err);
+      ctx.throw(new Error('test'));
     } catch (err) {
       assert.equal(err.status, 500);
       assert.equal(err.message, 'test');
@@ -108,10 +120,11 @@ describe('ctx.throw(status)', () => {
       const ctx = context();
 
       try {
-        const err = new Error('some error');
-        err.status = -1;
-        ctx.throw(err);
+        const error = new Error('some error');
+        error.status = -1;
+        ctx.throw(error);
       } catch (err) {
+        console.log("err>>", err, "<<");
         assert.equal(err.message, 'some error');
         assert.equal(err.expose, false);
       }
@@ -124,12 +137,13 @@ describe('ctx.throw(status, msg, props)', () => {
     const ctx = context();
 
     try {
-      ctx.throw(400, 'msg', { prop: true });
+      ctx.throw(400, 'msg', { prop: true,  msg: "hello" });
     } catch (err) {
       assert.equal(err.message, 'msg');
       assert.equal(err.status, 400);
       assert.equal(err.expose, true);
       assert.equal(err.prop, true);
+      assert.equal(err.msg, "hello");
     }
   });
 
@@ -140,10 +154,29 @@ describe('ctx.throw(status, msg, props)', () => {
       try {
         ctx.throw(400, 'msg', {
           prop: true,
-          status: -1
+          status: -1,
         });
       } catch (err) {
         assert.equal(err.message, 'msg');
+        assert.equal(err.status, 400);
+        assert.equal(err.expose, true);
+        assert.equal(err.prop, true);
+      }
+    });
+  });
+
+  describe('when props include message', () => {
+    it('should not be ignored', () => {
+      const ctx = context();
+
+      try {
+        ctx.throw(400, 'msg', {
+          prop: true,
+          status: -1,
+          message: "haha",
+        });
+      } catch (err) {
+        assert.equal(err.message, 'haha');
         assert.equal(err.status, 400);
         assert.equal(err.expose, true);
         assert.equal(err.prop, true);
@@ -157,18 +190,19 @@ describe('ctx.throw(msg, props)', () => {
     const ctx = context();
 
     try {
-      ctx.throw('msg', { prop: true });
+      ctx.throw('msg', { prop: true, msg: "haha" });
     } catch (err) {
       assert.equal(err.message, 'msg');
       assert.equal(err.status, 500);
       assert.equal(err.expose, false);
       assert.equal(err.prop, true);
+      assert.equal(err.msg, "haha");
     }
   });
 });
 
 describe('ctx.throw(status, props)', () => {
-  it('should mixin props', () => {
+  it('should mixin props - code = 400', () => {
     const ctx = context();
 
     try {
@@ -176,7 +210,20 @@ describe('ctx.throw(status, props)', () => {
     } catch (err) {
       assert.equal(err.message, 'Bad Request');
       assert.equal(err.status, 400);
-      assert.equal(err.expose, true);
+      assert.equal(err.expose, true); // code = 400, the expose is true
+      assert.equal(err.prop, true);
+    }
+  });
+
+  it('should mixin props - code = 500', () => {
+    const ctx = context();
+
+    try {
+      ctx.throw(500, { prop: true });
+    } catch (err) {
+      assert.equal(err.message, 'Internal Server Error');
+      assert.equal(err.status, 500);
+      assert.equal(err.expose, false); // code = 500, the expose is false
       assert.equal(err.prop, true);
     }
   });

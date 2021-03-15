@@ -7,6 +7,7 @@ const fs = require('fs');
 const Stream = require('stream');
 
 describe('res.body=', () => {
+
   describe('when Content-Type is set', () => {
     it('should not override', () => {
       const res = response();
@@ -107,7 +108,7 @@ describe('res.body=', () => {
     it('should default to an octet stream', () => {
       const res = response();
       res.body = fs.createReadStream('LICENSE');
-      assert.equal('application/octet-stream', res.header['content-type']);
+      assert.equal('application/octet-stream', res.header['content-type']); // octet-stream 中文翻译是 "字节流"
     });
 
     it('should add error handler to the stream, but only once', () => {
@@ -125,7 +126,7 @@ describe('res.body=', () => {
     it('should default to an octet stream', () => {
       const res = response();
       res.body = Buffer.from('hey');
-      assert.equal('application/octet-stream', res.header['content-type']);
+      assert.equal('application/octet-stream', res.header['content-type']); // octet-stream 中文翻译是 "字节流"
     });
 
     it('should set length', () => {

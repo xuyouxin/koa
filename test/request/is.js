@@ -1,4 +1,3 @@
-
 'use strict';
 
 const context = require('../helpers/context');
@@ -7,8 +6,8 @@ const assert = require('assert');
 describe('ctx.is(type)', () => {
   it('should ignore params', () => {
     const ctx = context();
-    ctx.header['content-type'] = 'text/html; charset=utf-8';
-    ctx.header['transfer-encoding'] = 'chunked';
+    ctx.header['content-type'] = 'text/html; charset=utf-8'; // it is the key point
+    ctx.header['transfer-encoding'] = 'chunked'; // FIXME：不明白这个是干啥的，没这个测试过不了
 
     assert.equal(ctx.is('text/*'), 'text/html');
   });
@@ -37,10 +36,10 @@ describe('ctx.is(type)', () => {
   describe('give no types', () => {
     it('should return the mime type', () => {
       const ctx = context();
-      ctx.header['content-type'] = 'image/png';
+      ctx.header['content-type'] = 'image/pngx';
       ctx.header['transfer-encoding'] = 'chunked';
 
-      assert.equal(ctx.is(), 'image/png');
+      assert.equal(ctx.is(), 'image/pngx');
     });
   });
 
@@ -72,6 +71,7 @@ describe('ctx.is(type)', () => {
 
       assert.equal(ctx.is('png'), 'png');
       assert.equal(ctx.is('.png'), '.png');
+
       assert.equal(ctx.is('text/*', 'image/*'), 'image/png');
       assert.equal(ctx.is('image/*', 'text/*'), 'image/png');
       assert.equal(ctx.is('image/*', 'image/png'), 'image/png');

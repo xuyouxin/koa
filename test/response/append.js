@@ -1,10 +1,10 @@
-
 'use strict';
 
 const assert = require('assert');
 const context = require('../helpers/context');
 
 describe('ctx.append(name, val)', () => {
+
   it('should append multiple headers', () => {
     const ctx = context();
     ctx.append('x-foo', 'bar1');
@@ -26,7 +26,7 @@ describe('ctx.append(name, val)', () => {
     ctx.append('Link', '<http://localhost/>');
     ctx.append('Link', '<http://localhost:80/>');
 
-    ctx.set('Link', '<http://127.0.0.1/>');
+    ctx.set('Link', '<http://127.0.0.1/>'); // 调用set之后会重置
 
     assert.equal(ctx.response.header.link, '<http://127.0.0.1/>');
   });
@@ -35,7 +35,7 @@ describe('ctx.append(name, val)', () => {
     const ctx = context();
 
     ctx.set('Link', '<http://localhost/>');
-    ctx.append('Link', '<http://localhost:80/>');
+    ctx.append('Link', '<http://localhost:80/>'); // 调用append之后会转化为数组
 
     assert.deepEqual(ctx.response.header.link, ['<http://localhost/>', '<http://localhost:80/>']);
   });

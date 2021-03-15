@@ -10,6 +10,7 @@ describe('req.inspect()', () => {
     it('should return null', () => {
       const req = request();
       req.method = 'GET';
+      console.log(">>", req.req, req.inspect());
       delete req.req;
       assert(undefined === req.inspect());
       assert('undefined' === util.inspect(req));
@@ -32,5 +33,6 @@ describe('req.inspect()', () => {
 
     assert.deepEqual(req.inspect(), expected);
     assert.deepEqual(util.inspect(req), util.inspect(expected));
+    console.log(util.inspect(expected));
   });
 });

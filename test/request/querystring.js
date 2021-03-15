@@ -6,6 +6,7 @@ const context = require('../helpers/context');
 const parseurl = require('parseurl');
 
 describe('ctx.querystring', () => {
+
   it('should return the querystring', () => {
     const ctx = context({ url: '/store/shoes?page=2&color=blue' });
     assert.equal(ctx.querystring, 'page=2&color=blue');
@@ -21,11 +22,13 @@ describe('ctx.querystring', () => {
 });
 
 describe('ctx.querystring=', () => {
+
   it('should replace the querystring', () => {
     const ctx = context({ url: '/store/shoes' });
     ctx.querystring = 'page=2&color=blue';
     assert.equal(ctx.url, '/store/shoes?page=2&color=blue');
     assert.equal(ctx.querystring, 'page=2&color=blue');
+    assert.equal(ctx.search, '?page=2&color=blue');
   });
 
   it('should update ctx.search and ctx.query', () => {

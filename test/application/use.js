@@ -6,7 +6,7 @@ const assert = require('assert');
 const Koa = require('../..');
 
 describe('app.use(fn)', () => {
-  it('should compose middleware', async() => {
+  it('should compose middleware - 1', async() => {
     const app = new Koa();
     const calls = [];
 
@@ -38,6 +38,36 @@ describe('app.use(fn)', () => {
       .expect(404);
 
     assert.deepEqual(calls, [1, 2, 3, 4, 5, 6]);
+  });
+
+  it('should compose middleware - 2', async() => {
+    const app = new Koa();
+    const calls = [];
+
+    app.use((ctx, next) => {
+      calls.push(1);
+      next();
+      calls.push(10)
+    });
+
+    app.use((ctx, next) => {
+      calls.push(2);
+    });
+
+    app.use((ctx, next) => {
+      calls.push(3);
+      return next().then(() => {
+        calls.push(4);
+      });
+    });
+
+    const server = app.listen();
+
+    await request(server)
+      .get('/')
+      .expect(404);
+
+    assert.deepEqual(calls, [1, 2, 10]);
   });
 
   it('should compose mixed middleware', async() => {
@@ -78,11 +108,11 @@ describe('app.use(fn)', () => {
   it('should catch thrown errors in non-async functions', () => {
     const app = new Koa();
 
-    app.use(ctx => ctx.throw('Not Found', 404));
+    app.use(ctx => ctx.throw('Not Found', 405));
 
     return request(app.callback())
       .get('/')
-      .expect(404);
+      .expect(405);
   });
 
   it('should accept both generator and function middleware', () => {

@@ -14,19 +14,25 @@ describe('ctx.set(name, val)', () => {
   it('should coerce number to string', () => {
     const ctx = context();
     ctx.set('x-foo', 5);
-    assert.equal(ctx.response.header['x-foo'], '5');
+    assert.equal(ctx.response.header['x-foo'], '5'); // 数字会转化成字符串
   });
 
   it('should coerce undefined to string', () => {
     const ctx = context();
     ctx.set('x-foo', undefined);
-    assert.equal(ctx.response.header['x-foo'], 'undefined');
+    assert.equal(ctx.response.header['x-foo'], 'undefined'); // undefined会转化成字符串
+  });
+
+  it('should coerce null to string', () => {
+    const ctx = context();
+    ctx.set('x-foo', null);
+    assert.equal(ctx.response.header['x-foo'], 'null'); // null会转化成字符串
   });
 
   it('should set a field value of array', () => {
     const ctx = context();
     ctx.set('x-foo', ['foo', 'bar', 123 ]);
-    assert.deepEqual(ctx.response.header['x-foo'], [ 'foo', 'bar', '123' ]);
+    assert.deepEqual(ctx.response.header['x-foo'], [ 'foo', 'bar', '123' ]); // value 可以是数组
   });
 });
 

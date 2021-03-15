@@ -5,6 +5,7 @@ const request = require('../helpers/context').request;
 const assert = require('assert');
 
 describe('req.type', () => {
+
   it('should return type void of parameters', () => {
     const req = request();
     req.header['content-type'] = 'text/html; charset=utf-8';

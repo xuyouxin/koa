@@ -8,6 +8,7 @@ const assert = require('assert');
 const Koa = require('../..');
 
 describe('res.status=', () => {
+
   describe('when a status code', () => {
     describe('and valid', () => {
       it('should set the status', () => {
@@ -22,15 +23,15 @@ describe('res.status=', () => {
     });
 
     describe('and invalid', () => {
-      it('should throw', () => {
+      it('should throw - 99', () => {
         assert.throws(() => {
           response().status = 99;
-        }, /invalid status code: 99/);
+        }, /invalid status code: 99/); // status的值无根据时，会抛异常
       });
     });
 
     describe('and custom status', () => {
-      beforeEach(() => statuses['700'] = 'custom status');
+      beforeEach(() => statuses['700'] = 'custom status'); // 可以自定义状态码
 
       it('should set the status', () => {
         const res = response();
@@ -62,7 +63,7 @@ describe('res.status=', () => {
   });
 
   function strip(status){
-    it('should strip content related header fields', async() => {
+    it('should strip content related header fields', async() => { // 剥除header字段相关的内容
       const app = new Koa();
 
       app.use(ctx => {
@@ -113,4 +114,6 @@ describe('res.status=', () => {
   describe('when 205', () => strip(205));
 
   describe('when 304', () => strip(304));
+
+  // describe('when 201', () => strip(201)); I add it to test
 });

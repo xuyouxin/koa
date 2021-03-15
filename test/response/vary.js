@@ -5,6 +5,7 @@ const assert = require('assert');
 const context = require('../helpers/context');
 
 describe('ctx.vary(field)', () => {
+
   describe('when Vary is not set', () => {
     it('should set it', () => {
       const ctx = context();

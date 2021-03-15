@@ -1,4 +1,3 @@
-
 'use strict';
 
 const assert = require('assert');
@@ -15,12 +14,14 @@ describe('ctx.query', () => {
       const ctx = context({ url: '/' });
       ctx.query.a = '2';
       assert.equal(ctx.query.a, '2');
+      expect(ctx.query).toEqual({ a: '2' });
     });
   });
 
   it('should return a parsed query string', () => {
     const ctx = context({ url: '/?page=2' });
     assert.equal(ctx.query.page, '2');
+    expect(ctx.query).toEqual({ page: '2' });
   });
 });
 

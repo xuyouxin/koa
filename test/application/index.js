@@ -1,4 +1,3 @@
-
 'use strict';
 
 const request = require('supertest');
@@ -21,7 +20,8 @@ describe('app', () => {
 
     request(app.callback())
       .get('/')
-      .end(() => {});
+      .end(() => {
+      });
   });
 
   it('should not .writeHead when !socket.writable', done => {
@@ -33,9 +33,9 @@ describe('app', () => {
       ctx.status = 204;
       // throw if .writeHead or .end is called
       ctx.res.writeHead =
-      ctx.res.end = () => {
-        throw new Error('response sent');
-      };
+        ctx.res.end = () => {
+          throw new Error('response sent');
+        };
     });
 
     // hackish, but the response should occur in a single tick
@@ -43,7 +43,8 @@ describe('app', () => {
 
     request(app.callback())
       .get('/')
-      .end(() => {});
+      .end(() => {
+      });
   });
 
   it('should set development env when NODE_ENV missing', () => {
@@ -67,7 +68,7 @@ describe('app', () => {
   });
 
   it('should set signed cookie keys from the constructor', () => {
-    const keys = ['customkey'];
+    const keys = ['customkey', "aaa"];
     const app = new Koa({ keys });
     assert.strictEqual(app.keys, keys);
   });
@@ -83,6 +84,8 @@ describe('app', () => {
 
     assert.notEqual(Koa.HttpError, undefined);
     assert.deepStrictEqual(Koa.HttpError, CreateError.HttpError);
-    assert.throws(() => { throw new CreateError(500, 'test error'); }, Koa.HttpError);
+    assert.throws(() => {
+      throw new CreateError(500, 'test error');
+    }, Koa.HttpError);
   });
 });

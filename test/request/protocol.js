@@ -1,14 +1,14 @@
-
 'use strict';
 
 const assert = require('assert');
 const request = require('../helpers/context').request;
 
 describe('req.protocol', () => {
+
   describe('when encrypted', () => {
     it('should return "https"', () => {
       const req = request();
-      req.req.socket = { encrypted: true };
+      req.req.socket = { encrypted: true }; // it is key point
       assert.equal(req.protocol, 'https');
     });
   });
@@ -16,27 +16,28 @@ describe('req.protocol', () => {
   describe('when unencrypted', () => {
     it('should return "http"', () => {
       const req = request();
-      req.req.socket = {};
+      req.req.socket = {}; // it is key point
       assert.equal(req.protocol, 'http');
     });
   });
 
   describe('when X-Forwarded-Proto is set', () => {
+
     describe('and proxy is trusted', () => {
       it('should be used', () => {
         const req = request();
-        req.app.proxy = true;
+        req.app.proxy = true; // it is key point
         req.req.socket = {};
-        req.header['x-forwarded-proto'] = 'https, http';
+        req.header['x-forwarded-proto'] = 'https, http'; // it is key point
         assert.equal(req.protocol, 'https');
       });
 
       describe('and X-Forwarded-Proto is empty', () => {
         it('should return "http"', () => {
           const req = request();
-          req.app.proxy = true;
+          req.app.proxy = true; // it is key point
           req.req.socket = {};
-          req.header['x-forwarded-proto'] = '';
+          req.header['x-forwarded-proto'] = ''; // it is key point
           assert.equal(req.protocol, 'http');
         });
       });
@@ -45,8 +46,9 @@ describe('req.protocol', () => {
     describe('and proxy is not trusted', () => {
       it('should not be used', () => {
         const req = request();
+        // it is key point
         req.req.socket = {};
-        req.header['x-forwarded-proto'] = 'https, http';
+        req.header['x-forwarded-proto'] = 'https, http'; // it is key point
         assert.equal(req.protocol, 'http');
       });
     });

@@ -1,4 +1,3 @@
-
 'use strict';
 
 const assert = require('assert');
@@ -29,18 +28,26 @@ describe('ctx.accepts(types)', () => {
         const ctx = context();
         assert.equal(ctx.accepts('text/html', 'text/plain', 'image/jpeg', 'application/*'), 'text/html');
       });
+
+      it('should return the first type - 2', () => {
+        const ctx = context();
+        assert.equal(ctx.accepts('text/plain', 'text/html', 'image/jpeg', 'application/*'), 'text/plain');
+      });
     });
   });
 
   describe('when extensions are given', () => {
     it('should convert to mime types', () => {
       const ctx = context();
-      ctx.req.headers.accept = 'text/plain, text/html';
+      ctx.req.headers.accept = 'text/plain, text/html, image/jpeg'; // will influence the result of ctx.accepts(xx)
       assert.equal(ctx.accepts('html'), 'html');
       assert.equal(ctx.accepts('.html'), '.html');
       assert.equal(ctx.accepts('txt'), 'txt');
       assert.equal(ctx.accepts('.txt'), '.txt');
       assert.equal(ctx.accepts('png'), false);
+      assert.equal(ctx.accepts('.png'), false);
+      assert.equal(ctx.accepts('image/jpeg'), 'image/jpeg');
+      assert.equal(ctx.accepts('xxx'), false);
     });
   });
 
@@ -78,6 +85,9 @@ describe('ctx.accepts(types)', () => {
       assert.equal(ctx.accepts('text/html'), 'text/html');
       assert.equal(ctx.accepts('text/plain'), 'text/plain');
       assert.equal(ctx.accepts('image/png'), 'image/png');
+      assert.equal(ctx.accepts('png'), 'png');
+      assert.equal(ctx.accepts('xxx'), false);
+      assert.equal(ctx.accepts('text/xxx'), 'text/xxx');
     });
   });
 

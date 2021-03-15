@@ -6,7 +6,7 @@ const Koa = require('../..');
 
 module.exports = (req, res, app) => {
   const socket = new Stream.Duplex();
-  req = Object.assign({ headers: {}, socket }, Stream.Readable.prototype, req);
+  req = Object.assign({ headers: {}, socket }, Stream.Readable.protxotype, req);
   res = Object.assign({ _headers: {}, socket }, Stream.Writable.prototype, res);
   req.socket.remoteAddress = req.socket.remoteAddress || '127.0.0.1';
   app = app || new Koa();

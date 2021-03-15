@@ -5,6 +5,7 @@ const assert = require('assert');
 const request = require('../helpers/context').request;
 
 describe('req.subdomains', () => {
+
   it('should return subdomain array', () => {
     const req = request();
     req.header.host = 'tobi.ferrets.example.com';
